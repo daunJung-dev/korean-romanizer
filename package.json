@@ -1,6 +1,6 @@
 {
   "name": "@daun_jung/korean-romanizer",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "한글 로마자 변환 라이브러리 - TypeScript 버전",
   "main": "dist/index.js",
   "module": "dist/esm/index.js",
