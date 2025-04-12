@@ -1,5 +1,5 @@
 [![Build Status](https://github.com/daunjung-dev/korean-romanizer/workflows/CI/badge.svg)](https://github.com/daunjung-dev/korean-romanizer/actions?query=workflow%3ACI)
-[![npm version](https://img.shields.io/npm/v/korean-romanizer-ts.svg)](https://www.npmjs.com/package/korean-romanizer-ts)
+[![npm version](https://img.shields.io/npm/v/@daun_jung/korean-romanizer.svg)](https://www.npmjs.com/package/@daun_jung/korean-romanizer)
 [![MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![TypeScript](https://img.shields.io/badge/%3C%2F%3E-TypeScript-%230074c1.svg)](https://www.typescriptlang.org/)
 
@@ -20,7 +20,7 @@
 ## 설치
 
 ```bash
-npm install korean-romanizer-ts
+npm install @daun_jung/korean-romanizer
 ```
 
 ## 사용 방법
@@ -33,8 +33,8 @@ import {
   romanize,
   romanizeWithType,
   romanizeWithAssimilation,
-} from "korean-romanizer";
-import { Type, ConsonantAssimilation } from "korean-romanizer";
+} from "@daun_jung/korean-romanizer";
+import { Type, ConsonantAssimilation } from "@daun_jung/korean-romanizer";
 
 // 기본 변환
 console.log(romanize("안녕하세요")); // "Annyeonghaseyo"
@@ -54,20 +54,20 @@ console.log(romanizeWithType("김철수", Type.Name)); // "Kim Cheolsu"
 
 ```typescript
 // 특정 함수만 필요할 경우
-import romanize from "korean-romanizer/romanize";
-import romanizeWithType from "korean-romanizer/romanizeWithType";
-import romanizeWithAssimilation from "korean-romanizer/romanizeWithAssimilation";
+import romanize from "@daun_jung/korean-romanizer/romanize";
+import romanizeWithType from "@daun_jung/korean-romanizer/romanizeWithType";
+import romanizeWithAssimilation from "@daun_jung/korean-romanizer/romanizeWithAssimilation";
 
 // 타입 임포트
-import { Type, ConsonantAssimilation } from "korean-romanizer";
+import { Type, ConsonantAssimilation } from "@daun_jung/korean-romanizer";
 ```
 
 ### 네임스페이스 사용 (기존 방식)
 
 ```typescript
 // 네임스페이스 방식 (하위 호환성 유지)
-import { KoreanRomanizer } from "korean-romanizer";
-import { Type, ConsonantAssimilation } from "korean-romanizer";
+import { KoreanRomanizer } from "@daun_jung/korean-romanizer";
+import { Type, ConsonantAssimilation } from "@daun_jung/korean-romanizer";
 
 // 기본 변환
 console.log(KoreanRomanizer.romanize("안녕하세요")); // "Annyeonghaseyo"
