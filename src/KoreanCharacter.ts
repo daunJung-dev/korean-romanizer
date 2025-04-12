@@ -6,12 +6,12 @@ export enum ConsonantAssimilation {
   /**
    * 순행동화 설정
    */
-  Progressive = "Progressive",
+  Progressive = 'Progressive',
 
   /**
    * 역행동화 설정
    */
-  Regressive = "Regressive",
+  Regressive = 'Regressive',
 }
 
 /**
@@ -21,32 +21,32 @@ export enum Type {
   /**
    * 명사와 같은 실체언
    */
-  Substantives = "Substantives",
+  Substantives = 'Substantives',
 
   /**
    * 복합어
    */
-  Compound = "Compound",
+  Compound = 'Compound',
 
   /**
    * 주소, 위치
    */
-  District = "District",
+  District = 'District',
 
   /**
    * 사람의 이름
    */
-  Name = "Name",
+  Name = 'Name',
 
   /**
    * 가장 일반적으로 사용되는 표기법을 따르는 사람의 이름
    */
-  NameTypical = "NameTypical",
+  NameTypical = 'NameTypical',
 
   /**
    * 일반 단어
    */
-  Typical = "Typical",
+  Typical = 'Typical',
 }
 
 /**
@@ -92,10 +92,7 @@ export interface IChosung {
     consonantAssimilation: ConsonantAssimilation,
     type: Type
   ): string;
-  isNeedHyphen(
-    prevCharacterPronunciation: string,
-    currentCharacterPronunciation: string
-  ): boolean;
+  isNeedHyphen(prevCharacterPronunciation: string, currentCharacterPronunciation: string): boolean;
 }
 
 // 기본 초성 클래스
@@ -113,39 +110,38 @@ export class Chosung implements IChosung {
   ): string {
     if (prevCharacter === null || !prevCharacter.isKoreanCharacter()) {
       return this.defaultPronunciation;
-    } else {
-      const complexPronunciation = this.getComplexPronunciation(
-        prevCharacter,
-        currentCharacter,
-        consonantAssimilation,
-        type
-      );
-
-      const prevPronunciation = prevCharacter.getRomanizedString(
-        null,
-        currentCharacter,
-        consonantAssimilation,
-        type
-      );
-
-      return this.isNeedHyphen(prevPronunciation, complexPronunciation)
-        ? "-" + complexPronunciation
-        : complexPronunciation;
     }
+    const complexPronunciation = this.getComplexPronunciation(
+      prevCharacter,
+      currentCharacter,
+      consonantAssimilation,
+      type
+    );
+
+    const prevPronunciation = prevCharacter.getRomanizedString(
+      null,
+      currentCharacter,
+      consonantAssimilation,
+      type
+    );
+
+    return this.isNeedHyphen(prevPronunciation, complexPronunciation)
+      ? `-${complexPronunciation}`
+      : complexPronunciation;
   }
 
   getComplexPronunciation(
-    prevCharacter: KoreanCharacter,
-    currentCharacter: KoreanCharacter,
-    consonantAssimilation: ConsonantAssimilation,
-    type: Type
+    _prevCharacter: KoreanCharacter,
+    _currentCharacter: KoreanCharacter,
+    _consonantAssimilation: ConsonantAssimilation,
+    _type: Type
   ): string {
     return this.defaultPronunciation;
   }
 
   isNeedHyphen(
-    prevCharacterPronunciation: string,
-    currentCharacterPronunciation: string
+    _prevCharacterPronunciation: string,
+    _currentCharacterPronunciation: string
   ): boolean {
     return false;
   }
@@ -154,14 +150,14 @@ export class Chosung implements IChosung {
 // ㄱ 초성 클래스
 export class ChosungG extends Chosung {
   constructor() {
-    super(ChosungValue.ㄱ, "g");
+    super(ChosungValue.ㄱ, 'g');
   }
 
   getComplexPronunciation(
     prevCharacter: KoreanCharacter,
-    currentCharacter: KoreanCharacter,
-    consonantAssimilation: ConsonantAssimilation,
-    type: Type
+    _currentCharacter: KoreanCharacter,
+    _consonantAssimilation: ConsonantAssimilation,
+    _type: Type
   ): string {
     const jongsung = prevCharacter.jongsung;
 
@@ -174,9 +170,10 @@ export class ChosungG extends Chosung {
       jongsung === JongsungValue.ㄿ ||
       jongsung === JongsungValue.ㅀ
     ) {
-      return "kk";
-    } else if (jongsung === JongsungValue.ㅎ) {
-      return "k";
+      return 'kk';
+    }
+    if (jongsung === JongsungValue.ㅎ) {
+      return 'k';
     }
 
     return this.defaultPronunciation;
@@ -184,28 +181,28 @@ export class ChosungG extends Chosung {
 
   isNeedHyphen(
     prevCharacterPronunciation: string,
-    currentCharacterPronunciation: string
+    _currentCharacterPronunciation: string
   ): boolean {
-    return prevCharacterPronunciation.endsWith("n");
+    return prevCharacterPronunciation.endsWith('n');
   }
 }
 
 // ㄴ 초성 클래스
 export class ChosungN extends Chosung {
   constructor() {
-    super(ChosungValue.ㄴ, "n");
+    super(ChosungValue.ㄴ, 'n');
   }
 
   getComplexPronunciation(
     prevCharacter: KoreanCharacter,
-    currentCharacter: KoreanCharacter,
-    consonantAssimilation: ConsonantAssimilation,
-    type: Type
+    _currentCharacter: KoreanCharacter,
+    _consonantAssimilation: ConsonantAssimilation,
+    _type: Type
   ): string {
     const jongsung = prevCharacter.jongsung;
 
     if (jongsung === JongsungValue.ㄹ || jongsung === JongsungValue.ㅀ) {
-      return "l";
+      return 'l';
     }
 
     return this.defaultPronunciation;
@@ -215,21 +212,22 @@ export class ChosungN extends Chosung {
 // ㄷ 초성 클래스
 export class ChosungD extends Chosung {
   constructor() {
-    super(ChosungValue.ㄷ, "d");
+    super(ChosungValue.ㄷ, 'd');
   }
 
   getComplexPronunciation(
     prevCharacter: KoreanCharacter,
-    currentCharacter: KoreanCharacter,
-    consonantAssimilation: ConsonantAssimilation,
-    type: Type
+    _currentCharacter: KoreanCharacter,
+    _consonantAssimilation: ConsonantAssimilation,
+    _type: Type
   ): string {
     const jongsung = prevCharacter.jongsung;
 
     if (jongsung === JongsungValue.ㄾ) {
-      return "tt";
-    } else if (jongsung === JongsungValue.ㄶ || jongsung === JongsungValue.ㅎ) {
-      return "t";
+      return 'tt';
+    }
+    if (jongsung === JongsungValue.ㄶ || jongsung === JongsungValue.ㅎ) {
+      return 't';
     }
 
     return this.defaultPronunciation;
@@ -239,14 +237,14 @@ export class ChosungD extends Chosung {
 // ㄹ 초성 클래스
 export class ChosungL extends Chosung {
   constructor() {
-    super(ChosungValue.ㄹ, "r");
+    super(ChosungValue.ㄹ, 'r');
   }
 
   getComplexPronunciation(
     prevCharacter: KoreanCharacter,
-    currentCharacter: KoreanCharacter,
+    _currentCharacter: KoreanCharacter,
     consonantAssimilation: ConsonantAssimilation,
-    type: Type
+    _type: Type
   ): string {
     const jongsung = prevCharacter.jongsung;
 
@@ -264,8 +262,9 @@ export class ChosungL extends Chosung {
       jongsung === JongsungValue.ㅋ ||
       jongsung === JongsungValue.ㅍ
     ) {
-      return "n";
-    } else if (
+      return 'n';
+    }
+    if (
       jongsung === JongsungValue.ㄴ ||
       jongsung === JongsungValue.ㄷ ||
       jongsung === JongsungValue.ㄵ ||
@@ -277,11 +276,11 @@ export class ChosungL extends Chosung {
       jongsung === JongsungValue.ㅎ
     ) {
       if (consonantAssimilation === ConsonantAssimilation.Progressive) {
-        return "n";
-      } else {
-        return "l";
+        return 'n';
       }
-    } else if (
+      return 'l';
+    }
+    if (
       jongsung === JongsungValue.ㄹ ||
       jongsung === JongsungValue.ㄻ ||
       jongsung === JongsungValue.ㄽ ||
@@ -289,7 +288,7 @@ export class ChosungL extends Chosung {
       jongsung === JongsungValue.ㅀ ||
       jongsung === JongsungValue.ㅌ
     ) {
-      return "l";
+      return 'l';
     }
 
     return this.defaultPronunciation;
@@ -299,19 +298,19 @@ export class ChosungL extends Chosung {
 // ㅂ 초성 클래스
 export class ChosungB extends Chosung {
   constructor() {
-    super(ChosungValue.ㅂ, "b");
+    super(ChosungValue.ㅂ, 'b');
   }
 
   getComplexPronunciation(
     prevCharacter: KoreanCharacter,
-    currentCharacter: KoreanCharacter,
-    consonantAssimilation: ConsonantAssimilation,
-    type: Type
+    _currentCharacter: KoreanCharacter,
+    _consonantAssimilation: ConsonantAssimilation,
+    _type: Type
   ): string {
     const jongsung = prevCharacter.jongsung;
 
     if (jongsung === JongsungValue.ㄾ) {
-      return "pp";
+      return 'pp';
     }
 
     return this.defaultPronunciation;
@@ -321,111 +320,104 @@ export class ChosungB extends Chosung {
 // ㅇ 초성 클래스
 export class ChosungEmpty extends Chosung {
   constructor() {
-    super(ChosungValue.ㅇ, "");
+    super(ChosungValue.ㅇ, '');
   }
 
   getComplexPronunciation(
     prevCharacter: KoreanCharacter,
     currentCharacter: KoreanCharacter,
-    consonantAssimilation: ConsonantAssimilation,
+    _consonantAssimilation: ConsonantAssimilation,
     type: Type
   ): string {
     const jongsung = prevCharacter.jongsung;
 
     if (jongsung === JongsungValue.ㄱ) {
-      if (
-        type === Type.Compound &&
-        currentCharacter.getJungsungObj().isInducePalatalization()
-      ) {
-        return "n";
-      } else {
-        return "g";
+      if (type === Type.Compound && currentCharacter.getJungsungObj().isInducePalatalization()) {
+        return 'n';
       }
-    } else if (jongsung === JongsungValue.ㄺ) {
-      return "g";
-    } else if (jongsung === JongsungValue.ㄲ) {
-      return "kk";
-    } else if (
+      return 'g';
+    }
+    if (jongsung === JongsungValue.ㄺ) {
+      return 'g';
+    }
+    if (jongsung === JongsungValue.ㄲ) {
+      return 'kk';
+    }
+    if (
       jongsung === JongsungValue.ㄳ ||
       jongsung === JongsungValue.ㄽ ||
       jongsung === JongsungValue.ㅄ ||
       jongsung === JongsungValue.ㅅ
     ) {
-      return "s";
-    } else if (jongsung === JongsungValue.ㅇ) {
-      if (
-        type === Type.Compound &&
-        currentCharacter.getJungsungObj().isInducePalatalization()
-      ) {
-        return "n";
-      } else {
-        return this.defaultPronunciation;
+      return 's';
+    }
+    if (jongsung === JongsungValue.ㅇ) {
+      if (type === Type.Compound && currentCharacter.getJungsungObj().isInducePalatalization()) {
+        return 'n';
       }
-    } else if (jongsung === JongsungValue.ㄴ || jongsung === JongsungValue.ㄶ) {
-      return "n";
-    } else if (jongsung === JongsungValue.ㄵ || jongsung === JongsungValue.ㅈ) {
-      return "j";
-    } else if (jongsung === JongsungValue.ㄷ) {
-      return currentCharacter.getJungsungObj().isInducePalatalization()
-        ? "j"
-        : "d";
-    } else if (jongsung === JongsungValue.ㄹ || jongsung === JongsungValue.ㅀ) {
-      if (
-        type === Type.Compound &&
-        currentCharacter.getJungsungObj().isInducePalatalization()
-      ) {
-        return "l";
-      } else {
-        return "r";
+      return this.defaultPronunciation;
+    }
+    if (jongsung === JongsungValue.ㄴ || jongsung === JongsungValue.ㄶ) {
+      return 'n';
+    }
+    if (jongsung === JongsungValue.ㄵ || jongsung === JongsungValue.ㅈ) {
+      return 'j';
+    }
+    if (jongsung === JongsungValue.ㄷ) {
+      return currentCharacter.getJungsungObj().isInducePalatalization() ? 'j' : 'd';
+    }
+    if (jongsung === JongsungValue.ㄹ || jongsung === JongsungValue.ㅀ) {
+      if (type === Type.Compound && currentCharacter.getJungsungObj().isInducePalatalization()) {
+        return 'l';
       }
-    } else if (jongsung === JongsungValue.ㄻ || jongsung === JongsungValue.ㅁ) {
-      return "m";
-    } else if (jongsung === JongsungValue.ㄼ || jongsung === JongsungValue.ㅂ) {
-      return "b";
-    } else if (jongsung === JongsungValue.ㄾ || jongsung === JongsungValue.ㅌ) {
-      return currentCharacter.getJungsungObj().isInducePalatalization()
-        ? "ch"
-        : "t";
-    } else if (jongsung === JongsungValue.ㄿ || jongsung === JongsungValue.ㅍ) {
-      return "p";
-    } else if (jongsung === JongsungValue.ㅆ) {
-      return "ss";
-    } else if (jongsung === JongsungValue.ㅊ) {
-      return "ch";
-    } else if (jongsung === JongsungValue.ㅋ) {
-      return "k";
+      return 'r';
+    }
+    if (jongsung === JongsungValue.ㄻ || jongsung === JongsungValue.ㅁ) {
+      return 'm';
+    }
+    if (jongsung === JongsungValue.ㄼ || jongsung === JongsungValue.ㅂ) {
+      return 'b';
+    }
+    if (jongsung === JongsungValue.ㄾ || jongsung === JongsungValue.ㅌ) {
+      return currentCharacter.getJungsungObj().isInducePalatalization() ? 'ch' : 't';
+    }
+    if (jongsung === JongsungValue.ㄿ || jongsung === JongsungValue.ㅍ) {
+      return 'p';
+    }
+    if (jongsung === JongsungValue.ㅆ) {
+      return 'ss';
+    }
+    if (jongsung === JongsungValue.ㅊ) {
+      return 'ch';
+    }
+    if (jongsung === JongsungValue.ㅋ) {
+      return 'k';
     }
 
     return this.defaultPronunciation;
   }
 
-  isNeedHyphen(
-    prevCharacterPronunciation: string,
-    currentCharacterPronunciation: string
-  ): boolean {
-    return (
-      prevCharacterPronunciation.endsWith("ng") &&
-      currentCharacterPronunciation.length === 0
-    );
+  isNeedHyphen(prevCharacterPronunciation: string, currentCharacterPronunciation: string): boolean {
+    return prevCharacterPronunciation.endsWith('ng') && currentCharacterPronunciation.length === 0;
   }
 }
 
 // ㅈ 초성 클래스
 export class ChosungJ extends Chosung {
   constructor() {
-    super(ChosungValue.ㅈ, "j");
+    super(ChosungValue.ㅈ, 'j');
   }
 
   getComplexPronunciation(
     prevCharacter: KoreanCharacter,
-    currentCharacter: KoreanCharacter,
-    consonantAssimilation: ConsonantAssimilation,
-    type: Type
+    _currentCharacter: KoreanCharacter,
+    _consonantAssimilation: ConsonantAssimilation,
+    _type: Type
   ): string {
     const jongsung = prevCharacter.jongsung;
 
     if (jongsung === JongsungValue.ㅎ) {
-      return "ch";
+      return 'ch';
     }
 
     return this.defaultPronunciation;
@@ -435,21 +427,19 @@ export class ChosungJ extends Chosung {
 // ㅌ 초성 클래스
 export class ChosungT extends Chosung {
   constructor() {
-    super(ChosungValue.ㅌ, "t");
+    super(ChosungValue.ㅌ, 't');
   }
 
   getComplexPronunciation(
     prevCharacter: KoreanCharacter,
     currentCharacter: KoreanCharacter,
-    consonantAssimilation: ConsonantAssimilation,
-    type: Type
+    _consonantAssimilation: ConsonantAssimilation,
+    _type: Type
   ): string {
     const jongsung = prevCharacter.jongsung;
 
     if (jongsung === JongsungValue.ㅈ || jongsung === JongsungValue.ㅊ) {
-      return currentCharacter.getJungsungObj().isInducePalatalization()
-        ? "ch"
-        : "t";
+      return currentCharacter.getJungsungObj().isInducePalatalization() ? 'ch' : 't';
     }
 
     return this.defaultPronunciation;
@@ -457,36 +447,36 @@ export class ChosungT extends Chosung {
 
   isNeedHyphen(
     prevCharacterPronunciation: string,
-    currentCharacterPronunciation: string
+    _currentCharacterPronunciation: string
   ): boolean {
-    return prevCharacterPronunciation.endsWith("t");
+    return prevCharacterPronunciation.endsWith('t');
   }
 }
 
 // ㅍ 초성 클래스
 export class ChosungP extends Chosung {
   constructor() {
-    super(ChosungValue.ㅍ, "p");
+    super(ChosungValue.ㅍ, 'p');
   }
 
   isNeedHyphen(
     prevCharacterPronunciation: string,
-    currentCharacterPronunciation: string
+    _currentCharacterPronunciation: string
   ): boolean {
-    return prevCharacterPronunciation.endsWith("p");
+    return prevCharacterPronunciation.endsWith('p');
   }
 }
 
 // ㅎ 초성 클래스
 export class ChosungH extends Chosung {
   constructor() {
-    super(ChosungValue.ㅎ, "h");
+    super(ChosungValue.ㅎ, 'h');
   }
 
   getComplexPronunciation(
     prevCharacter: KoreanCharacter,
     currentCharacter: KoreanCharacter,
-    consonantAssimilation: ConsonantAssimilation,
+    _consonantAssimilation: ConsonantAssimilation,
     type: Type
   ): string {
     const jongsung = prevCharacter.jongsung;
@@ -494,20 +484,19 @@ export class ChosungH extends Chosung {
     if (jongsung === JongsungValue.ㄱ) {
       if (type === Type.Substantives) {
         return this.defaultPronunciation;
-      } else {
-        return "";
       }
-    } else if (jongsung === JongsungValue.ㄲ) {
-      return "kk";
-    } else if (jongsung === JongsungValue.ㄷ) {
+      return '';
+    }
+    if (jongsung === JongsungValue.ㄲ) {
+      return 'kk';
+    }
+    if (jongsung === JongsungValue.ㄷ) {
       if (type === Type.Substantives) {
         return this.defaultPronunciation;
-      } else {
-        return currentCharacter.getJungsungObj().isInducePalatalization()
-          ? "ch"
-          : "t";
       }
-    } else if (
+      return currentCharacter.getJungsungObj().isInducePalatalization() ? 'ch' : 't';
+    }
+    if (
       jongsung === JongsungValue.ㄾ ||
       jongsung === JongsungValue.ㅅ ||
       jongsung === JongsungValue.ㅆ ||
@@ -515,37 +504,34 @@ export class ChosungH extends Chosung {
       jongsung === JongsungValue.ㅊ ||
       jongsung === JongsungValue.ㅌ
     ) {
-      return currentCharacter.getJungsungObj().isInducePalatalization()
-        ? "ch"
-        : "t";
-    } else if (jongsung === JongsungValue.ㄺ) {
-      return "k";
-    } else if (jongsung === JongsungValue.ㄼ) {
-      return "p";
-    } else if (jongsung === JongsungValue.ㄽ) {
-      return "s";
-    } else if (jongsung === JongsungValue.ㅀ) {
-      return "r";
-    } else if (jongsung === JongsungValue.ㅂ) {
+      return currentCharacter.getJungsungObj().isInducePalatalization() ? 'ch' : 't';
+    }
+    if (jongsung === JongsungValue.ㄺ) {
+      return 'k';
+    }
+    if (jongsung === JongsungValue.ㄼ) {
+      return 'p';
+    }
+    if (jongsung === JongsungValue.ㄽ) {
+      return 's';
+    }
+    if (jongsung === JongsungValue.ㅀ) {
+      return 'r';
+    }
+    if (jongsung === JongsungValue.ㅂ) {
       if (type === Type.Substantives) {
         return this.defaultPronunciation;
-      } else {
-        return "p";
       }
+      return 'p';
     }
 
     return this.defaultPronunciation;
   }
 
-  isNeedHyphen(
-    prevCharacterPronunciation: string,
-    currentCharacterPronunciation: string
-  ): boolean {
+  isNeedHyphen(prevCharacterPronunciation: string, currentCharacterPronunciation: string): boolean {
     return (
       currentCharacterPronunciation.length > 0 &&
-      prevCharacterPronunciation.endsWith(
-        String(currentCharacterPronunciation.charAt(0))
-      )
+      prevCharacterPronunciation.endsWith(String(currentCharacterPronunciation.charAt(0)))
     );
   }
 }
@@ -606,8 +592,7 @@ export class Jungsung implements IJungsung {
     let insertHyphen = false;
 
     if (
-      prevCharacter !== null &&
-      prevCharacter.isKoreanCharacter() &&
+      prevCharacter?.isKoreanCharacter() &&
       prevCharacter.jongsung === JongsungValue.NONE &&
       currentCharacter.chosung === ChosungValue.ㅇ
     ) {
@@ -619,25 +604,18 @@ export class Jungsung implements IJungsung {
 
       const firstChar = this.defaultPronunciation.charAt(0);
 
-      if (lastChar === "a") {
-        if (firstChar === "a" || firstChar === "e") {
+      if (lastChar === 'a') {
+        if (firstChar === 'a' || firstChar === 'e') {
           insertHyphen = true;
         }
-      } else if (lastChar === "e") {
-        if (
-          firstChar === "a" ||
-          firstChar === "e" ||
-          firstChar === "o" ||
-          firstChar === "u"
-        ) {
+      } else if (lastChar === 'e') {
+        if (firstChar === 'a' || firstChar === 'e' || firstChar === 'o' || firstChar === 'u') {
           insertHyphen = true;
         }
       }
     }
 
-    return insertHyphen
-      ? "-" + this.defaultPronunciation
-      : this.defaultPronunciation;
+    return insertHyphen ? `-${this.defaultPronunciation}` : this.defaultPronunciation;
   }
 
   isInducePalatalization(): boolean {
@@ -711,17 +689,13 @@ export class Jongsung implements IJongsung {
   ): string {
     return nextCharacter === null || !nextCharacter.isKoreanCharacter()
       ? this.defaultPronunciation
-      : this.getComplexPronunciation(
-          nextCharacter,
-          consonantAssimilation,
-          type
-        );
+      : this.getComplexPronunciation(nextCharacter, consonantAssimilation, type);
   }
 
   getComplexPronunciation(
-    nextCharacter: KoreanCharacter,
-    consonantAssimilation: ConsonantAssimilation,
-    type: Type
+    _nextCharacter: KoreanCharacter,
+    _consonantAssimilation: ConsonantAssimilation,
+    _type: Type
   ): string {
     return this.defaultPronunciation;
   }
@@ -730,33 +704,27 @@ export class Jongsung implements IJongsung {
 // ㄱ 종성 클래스
 export class JongsungG extends Jongsung {
   constructor() {
-    super(JongsungValue.ㄱ, "k");
+    super(JongsungValue.ㄱ, 'k');
   }
 
   getComplexPronunciation(
     nextCharacter: KoreanCharacter,
-    consonantAssimilation: ConsonantAssimilation,
+    _consonantAssimilation: ConsonantAssimilation,
     type: Type
   ): string {
     const chosung = nextCharacter.chosung;
 
     if (chosung === ChosungValue.ㄲ || chosung === ChosungValue.ㅋ) {
-      return "";
-    } else if (chosung === ChosungValue.ㅇ) {
-      if (
-        type === Type.Compound &&
-        nextCharacter.getJungsungObj().isInducePalatalization()
-      ) {
-        return "ng";
-      } else {
-        return "";
+      return '';
+    }
+    if (chosung === ChosungValue.ㅇ) {
+      if (type === Type.Compound && nextCharacter.getJungsungObj().isInducePalatalization()) {
+        return 'ng';
       }
-    } else if (
-      chosung === ChosungValue.ㄴ ||
-      chosung === ChosungValue.ㅁ ||
-      chosung === ChosungValue.ㄹ
-    ) {
-      return "ng";
+      return '';
+    }
+    if (chosung === ChosungValue.ㄴ || chosung === ChosungValue.ㅁ || chosung === ChosungValue.ㄹ) {
+      return 'ng';
     }
 
     return this.defaultPronunciation;
@@ -766,13 +734,13 @@ export class JongsungG extends Jongsung {
 // ㄲ 종성 클래스
 export class JongsungGG extends Jongsung {
   constructor() {
-    super(JongsungValue.ㄲ, "k");
+    super(JongsungValue.ㄲ, 'k');
   }
 
   getComplexPronunciation(
     nextCharacter: KoreanCharacter,
-    consonantAssimilation: ConsonantAssimilation,
-    type: Type
+    _consonantAssimilation: ConsonantAssimilation,
+    _type: Type
   ): string {
     const chosung = nextCharacter.chosung;
 
@@ -782,13 +750,10 @@ export class JongsungGG extends Jongsung {
       chosung === ChosungValue.ㅇ ||
       chosung === ChosungValue.ㅎ
     ) {
-      return "";
-    } else if (
-      chosung === ChosungValue.ㄴ ||
-      chosung === ChosungValue.ㅁ ||
-      chosung === ChosungValue.ㄹ
-    ) {
-      return "ng";
+      return '';
+    }
+    if (chosung === ChosungValue.ㄴ || chosung === ChosungValue.ㅁ || chosung === ChosungValue.ㄹ) {
+      return 'ng';
     }
 
     return this.defaultPronunciation;
@@ -798,24 +763,21 @@ export class JongsungGG extends Jongsung {
 // ㄳ 종성 클래스
 export class JongsungGS extends Jongsung {
   constructor() {
-    super(JongsungValue.ㄳ, "k");
+    super(JongsungValue.ㄳ, 'k');
   }
 
   getComplexPronunciation(
     nextCharacter: KoreanCharacter,
-    consonantAssimilation: ConsonantAssimilation,
-    type: Type
+    _consonantAssimilation: ConsonantAssimilation,
+    _type: Type
   ): string {
     const chosung = nextCharacter.chosung;
 
     if (chosung === ChosungValue.ㄲ || chosung === ChosungValue.ㅋ) {
-      return "";
-    } else if (
-      chosung === ChosungValue.ㄴ ||
-      chosung === ChosungValue.ㅁ ||
-      chosung === ChosungValue.ㄹ
-    ) {
-      return "ng";
+      return '';
+    }
+    if (chosung === ChosungValue.ㄴ || chosung === ChosungValue.ㅁ || chosung === ChosungValue.ㄹ) {
+      return 'ng';
     }
 
     return this.defaultPronunciation;
@@ -825,22 +787,21 @@ export class JongsungGS extends Jongsung {
 // ㄴ 종성 클래스
 export class JongsungN extends Jongsung {
   constructor() {
-    super(JongsungValue.ㄴ, "n");
+    super(JongsungValue.ㄴ, 'n');
   }
 
   getComplexPronunciation(
     nextCharacter: KoreanCharacter,
     consonantAssimilation: ConsonantAssimilation,
-    type: Type
+    _type: Type
   ): string {
     const chosung = nextCharacter.chosung;
 
     if (chosung === ChosungValue.ㄹ) {
-      return consonantAssimilation === ConsonantAssimilation.Regressive
-        ? "l"
-        : "n";
-    } else if (chosung === ChosungValue.ㅇ) {
-      return "";
+      return consonantAssimilation === ConsonantAssimilation.Regressive ? 'l' : 'n';
+    }
+    if (chosung === ChosungValue.ㅇ) {
+      return '';
     }
 
     return this.defaultPronunciation;
@@ -850,20 +811,18 @@ export class JongsungN extends Jongsung {
 // ㄵ 종성 클래스
 export class JongsungNJ extends Jongsung {
   constructor() {
-    super(JongsungValue.ㄵ, "n");
+    super(JongsungValue.ㄵ, 'n');
   }
 
   getComplexPronunciation(
     nextCharacter: KoreanCharacter,
     consonantAssimilation: ConsonantAssimilation,
-    type: Type
+    _type: Type
   ): string {
     const chosung = nextCharacter.chosung;
 
     if (chosung === ChosungValue.ㄹ) {
-      return consonantAssimilation === ConsonantAssimilation.Regressive
-        ? "l"
-        : "n";
+      return consonantAssimilation === ConsonantAssimilation.Regressive ? 'l' : 'n';
     }
 
     return this.defaultPronunciation;
@@ -873,7 +832,7 @@ export class JongsungNJ extends Jongsung {
 // ㄶ 종성 클래스
 export class JongsungNH extends Jongsung {
   constructor() {
-    super(JongsungValue.ㄶ, "n");
+    super(JongsungValue.ㄶ, 'n');
   }
 
   getComplexPronunciation(
@@ -882,18 +841,14 @@ export class JongsungNH extends Jongsung {
     type: Type
   ): string {
     // Java에서는 ㄴ의 로직을 재사용함
-    return new JongsungN().getComplexPronunciation(
-      nextCharacter,
-      consonantAssimilation,
-      type
-    );
+    return new JongsungN().getComplexPronunciation(nextCharacter, consonantAssimilation, type);
   }
 }
 
 // ㄷ 종성 클래스
 export class JongsungD extends Jongsung {
   constructor() {
-    super(JongsungValue.ㄷ, "t");
+    super(JongsungValue.ㄷ, 't');
   }
 
   getComplexPronunciation(
@@ -904,8 +859,9 @@ export class JongsungD extends Jongsung {
     const chosung = nextCharacter.chosung;
 
     if (chosung === ChosungValue.ㄴ || chosung === ChosungValue.ㅁ) {
-      return "n";
-    } else if (
+      return 'n';
+    }
+    if (
       chosung === ChosungValue.ㄸ ||
       chosung === ChosungValue.ㅇ ||
       chosung === ChosungValue.ㅌ ||
@@ -913,13 +869,11 @@ export class JongsungD extends Jongsung {
     ) {
       if (type === Type.Substantives) {
         return this.defaultPronunciation;
-      } else {
-        return "";
       }
-    } else if (chosung === ChosungValue.ㄹ) {
-      return consonantAssimilation === ConsonantAssimilation.Regressive
-        ? "l"
-        : "n";
+      return '';
+    }
+    if (chosung === ChosungValue.ㄹ) {
+      return consonantAssimilation === ConsonantAssimilation.Regressive ? 'l' : 'n';
     }
 
     return this.defaultPronunciation;
@@ -929,25 +883,21 @@ export class JongsungD extends Jongsung {
 // ㄹ 종성 클래스
 export class JongsungL extends Jongsung {
   constructor() {
-    super(JongsungValue.ㄹ, "l");
+    super(JongsungValue.ㄹ, 'l');
   }
 
   getComplexPronunciation(
     nextCharacter: KoreanCharacter,
-    consonantAssimilation: ConsonantAssimilation,
+    _consonantAssimilation: ConsonantAssimilation,
     type: Type
   ): string {
     const chosung = nextCharacter.chosung;
 
     if (chosung === ChosungValue.ㅇ) {
-      if (
-        type === Type.Compound &&
-        nextCharacter.getJungsungObj().isInducePalatalization()
-      ) {
+      if (type === Type.Compound && nextCharacter.getJungsungObj().isInducePalatalization()) {
         return this.defaultPronunciation;
-      } else {
-        return "";
       }
+      return '';
     }
 
     return this.defaultPronunciation;
@@ -959,74 +909,74 @@ export class JongsungMap {
   private static instances: Map<JongsungValue, IJongsung> = new Map();
 
   static getJongsung(value: JongsungValue): IJongsung {
-    if (!this.instances.has(value)) {
+    if (!JongsungMap.instances.has(value)) {
       switch (value) {
         case JongsungValue.ㄱ:
-          this.instances.set(value, new JongsungG());
+          JongsungMap.instances.set(value, new JongsungG());
           break;
         case JongsungValue.ㄲ:
-          this.instances.set(value, new JongsungGG());
+          JongsungMap.instances.set(value, new JongsungGG());
           break;
         case JongsungValue.ㄳ:
-          this.instances.set(value, new JongsungGS());
+          JongsungMap.instances.set(value, new JongsungGS());
           break;
         case JongsungValue.ㄴ:
-          this.instances.set(value, new JongsungN());
+          JongsungMap.instances.set(value, new JongsungN());
           break;
         case JongsungValue.ㄵ:
-          this.instances.set(value, new JongsungNJ());
+          JongsungMap.instances.set(value, new JongsungNJ());
           break;
         case JongsungValue.ㄶ:
-          this.instances.set(value, new JongsungNH());
+          JongsungMap.instances.set(value, new JongsungNH());
           break;
         case JongsungValue.ㄷ:
-          this.instances.set(value, new JongsungD());
+          JongsungMap.instances.set(value, new JongsungD());
           break;
         case JongsungValue.ㄹ:
-          this.instances.set(value, new JongsungL());
+          JongsungMap.instances.set(value, new JongsungL());
           break;
         case JongsungValue.ㄺ:
-          this.instances.set(value, new JongsungLG());
+          JongsungMap.instances.set(value, new JongsungLG());
           break;
         case JongsungValue.ㄻ:
-          this.instances.set(value, new JongsungLM());
+          JongsungMap.instances.set(value, new JongsungLM());
           break;
         case JongsungValue.ㄼ:
-          this.instances.set(value, new JongsungLB());
+          JongsungMap.instances.set(value, new JongsungLB());
           break;
         case JongsungValue.ㄿ:
-          this.instances.set(value, new JongsungLP());
+          JongsungMap.instances.set(value, new JongsungLP());
           break;
         case JongsungValue.ㅀ:
-          this.instances.set(value, new JongsungLH());
+          JongsungMap.instances.set(value, new JongsungLH());
           break;
         case JongsungValue.ㅁ:
-          this.instances.set(value, new JongsungM());
+          JongsungMap.instances.set(value, new JongsungM());
           break;
         case JongsungValue.ㅂ:
-          this.instances.set(value, new JongsungB());
+          JongsungMap.instances.set(value, new JongsungB());
           break;
         case JongsungValue.ㅄ:
-          this.instances.set(value, new JongsungBS());
+          JongsungMap.instances.set(value, new JongsungBS());
           break;
         case JongsungValue.ㅅ:
-          this.instances.set(value, new JongsungS());
+          JongsungMap.instances.set(value, new JongsungS());
           break;
         case JongsungValue.ㅆ:
-          this.instances.set(value, new JongsungS()); // ㅅ과 동일 로직
+          JongsungMap.instances.set(value, new JongsungS()); // ㅅ과 동일 로직
           break;
         case JongsungValue.ㅎ:
-          this.instances.set(value, new JongsungH());
+          JongsungMap.instances.set(value, new JongsungH());
           break;
         default:
-          this.instances.set(
+          JongsungMap.instances.set(
             value,
             new Jongsung(value, jongsungDefaultPronunciations[value])
           );
           break;
       }
     }
-    return this.instances.get(value)!;
+    return JongsungMap.instances.get(value)!;
   }
 }
 
@@ -1035,47 +985,44 @@ export class ChosungMap {
   private static instances: Map<ChosungValue, IChosung> = new Map();
 
   static getChosung(value: ChosungValue): IChosung {
-    if (!this.instances.has(value)) {
+    if (!ChosungMap.instances.has(value)) {
       switch (value) {
         case ChosungValue.ㄱ:
-          this.instances.set(value, new ChosungG());
+          ChosungMap.instances.set(value, new ChosungG());
           break;
         case ChosungValue.ㄴ:
-          this.instances.set(value, new ChosungN());
+          ChosungMap.instances.set(value, new ChosungN());
           break;
         case ChosungValue.ㄷ:
-          this.instances.set(value, new ChosungD());
+          ChosungMap.instances.set(value, new ChosungD());
           break;
         case ChosungValue.ㄹ:
-          this.instances.set(value, new ChosungL());
+          ChosungMap.instances.set(value, new ChosungL());
           break;
         case ChosungValue.ㅂ:
-          this.instances.set(value, new ChosungB());
+          ChosungMap.instances.set(value, new ChosungB());
           break;
         case ChosungValue.ㅇ:
-          this.instances.set(value, new ChosungEmpty());
+          ChosungMap.instances.set(value, new ChosungEmpty());
           break;
         case ChosungValue.ㅈ:
-          this.instances.set(value, new ChosungJ());
+          ChosungMap.instances.set(value, new ChosungJ());
           break;
         case ChosungValue.ㅌ:
-          this.instances.set(value, new ChosungT());
+          ChosungMap.instances.set(value, new ChosungT());
           break;
         case ChosungValue.ㅍ:
-          this.instances.set(value, new ChosungP());
+          ChosungMap.instances.set(value, new ChosungP());
           break;
         case ChosungValue.ㅎ:
-          this.instances.set(value, new ChosungH());
+          ChosungMap.instances.set(value, new ChosungH());
           break;
         default:
-          this.instances.set(
-            value,
-            new Chosung(value, chosungDefaultPronunciations[value])
-          );
+          ChosungMap.instances.set(value, new Chosung(value, chosungDefaultPronunciations[value]));
           break;
       }
     }
-    return this.instances.get(value)!;
+    return ChosungMap.instances.get(value)!;
   }
 }
 
@@ -1083,49 +1030,49 @@ export class ChosungMap {
 
 // 기본 발음 매핑
 const chosungDefaultPronunciations: { [key in ChosungValue]: string } = {
-  [ChosungValue.ㄱ]: "g",
-  [ChosungValue.ㄲ]: "kk",
-  [ChosungValue.ㄴ]: "n",
-  [ChosungValue.ㄷ]: "d",
-  [ChosungValue.ㄸ]: "tt",
-  [ChosungValue.ㄹ]: "r",
-  [ChosungValue.ㅁ]: "m",
-  [ChosungValue.ㅂ]: "b",
-  [ChosungValue.ㅃ]: "pp",
-  [ChosungValue.ㅅ]: "s",
-  [ChosungValue.ㅆ]: "ss",
-  [ChosungValue.ㅇ]: "",
-  [ChosungValue.ㅈ]: "j",
-  [ChosungValue.ㅉ]: "jj",
-  [ChosungValue.ㅊ]: "ch",
-  [ChosungValue.ㅋ]: "k",
-  [ChosungValue.ㅌ]: "t",
-  [ChosungValue.ㅍ]: "p",
-  [ChosungValue.ㅎ]: "h",
+  [ChosungValue.ㄱ]: 'g',
+  [ChosungValue.ㄲ]: 'kk',
+  [ChosungValue.ㄴ]: 'n',
+  [ChosungValue.ㄷ]: 'd',
+  [ChosungValue.ㄸ]: 'tt',
+  [ChosungValue.ㄹ]: 'r',
+  [ChosungValue.ㅁ]: 'm',
+  [ChosungValue.ㅂ]: 'b',
+  [ChosungValue.ㅃ]: 'pp',
+  [ChosungValue.ㅅ]: 's',
+  [ChosungValue.ㅆ]: 'ss',
+  [ChosungValue.ㅇ]: '',
+  [ChosungValue.ㅈ]: 'j',
+  [ChosungValue.ㅉ]: 'jj',
+  [ChosungValue.ㅊ]: 'ch',
+  [ChosungValue.ㅋ]: 'k',
+  [ChosungValue.ㅌ]: 't',
+  [ChosungValue.ㅍ]: 'p',
+  [ChosungValue.ㅎ]: 'h',
 };
 
 const jungsungDefaultPronunciations: { [key in JungsungValue]: string } = {
-  [JungsungValue.ㅏ]: "a",
-  [JungsungValue.ㅐ]: "ae",
-  [JungsungValue.ㅑ]: "ya",
-  [JungsungValue.ㅒ]: "yae",
-  [JungsungValue.ㅓ]: "eo",
-  [JungsungValue.ㅔ]: "e",
-  [JungsungValue.ㅕ]: "yeo",
-  [JungsungValue.ㅖ]: "ye",
-  [JungsungValue.ㅗ]: "o",
-  [JungsungValue.ㅘ]: "wa",
-  [JungsungValue.ㅙ]: "wae",
-  [JungsungValue.ㅚ]: "oe",
-  [JungsungValue.ㅛ]: "yo",
-  [JungsungValue.ㅜ]: "u",
-  [JungsungValue.ㅝ]: "wo",
-  [JungsungValue.ㅞ]: "we",
-  [JungsungValue.ㅟ]: "wi",
-  [JungsungValue.ㅠ]: "yu",
-  [JungsungValue.ㅡ]: "eu",
-  [JungsungValue.ㅢ]: "ui",
-  [JungsungValue.ㅣ]: "i",
+  [JungsungValue.ㅏ]: 'a',
+  [JungsungValue.ㅐ]: 'ae',
+  [JungsungValue.ㅑ]: 'ya',
+  [JungsungValue.ㅒ]: 'yae',
+  [JungsungValue.ㅓ]: 'eo',
+  [JungsungValue.ㅔ]: 'e',
+  [JungsungValue.ㅕ]: 'yeo',
+  [JungsungValue.ㅖ]: 'ye',
+  [JungsungValue.ㅗ]: 'o',
+  [JungsungValue.ㅘ]: 'wa',
+  [JungsungValue.ㅙ]: 'wae',
+  [JungsungValue.ㅚ]: 'oe',
+  [JungsungValue.ㅛ]: 'yo',
+  [JungsungValue.ㅜ]: 'u',
+  [JungsungValue.ㅝ]: 'wo',
+  [JungsungValue.ㅞ]: 'we',
+  [JungsungValue.ㅟ]: 'wi',
+  [JungsungValue.ㅠ]: 'yu',
+  [JungsungValue.ㅡ]: 'eu',
+  [JungsungValue.ㅢ]: 'ui',
+  [JungsungValue.ㅣ]: 'i',
 };
 
 const jungsungPalatalization: { [key in JungsungValue]: boolean } = {
@@ -1153,34 +1100,34 @@ const jungsungPalatalization: { [key in JungsungValue]: boolean } = {
 };
 
 const jongsungDefaultPronunciations: { [key in JongsungValue]: string } = {
-  [JongsungValue.NONE]: "",
-  [JongsungValue.ㄱ]: "k",
-  [JongsungValue.ㄲ]: "k",
-  [JongsungValue.ㄳ]: "k",
-  [JongsungValue.ㄴ]: "n",
-  [JongsungValue.ㄵ]: "n",
-  [JongsungValue.ㄶ]: "n",
-  [JongsungValue.ㄷ]: "t",
-  [JongsungValue.ㄹ]: "l",
-  [JongsungValue.ㄺ]: "k",
-  [JongsungValue.ㄻ]: "m",
-  [JongsungValue.ㄼ]: "l",
-  [JongsungValue.ㄽ]: "l",
-  [JongsungValue.ㄾ]: "l",
-  [JongsungValue.ㄿ]: "l",
-  [JongsungValue.ㅀ]: "l",
-  [JongsungValue.ㅁ]: "m",
-  [JongsungValue.ㅂ]: "p",
-  [JongsungValue.ㅄ]: "p",
-  [JongsungValue.ㅅ]: "t",
-  [JongsungValue.ㅆ]: "t",
-  [JongsungValue.ㅇ]: "ng",
-  [JongsungValue.ㅈ]: "t",
-  [JongsungValue.ㅊ]: "t",
-  [JongsungValue.ㅋ]: "k",
-  [JongsungValue.ㅌ]: "t",
-  [JongsungValue.ㅍ]: "p",
-  [JongsungValue.ㅎ]: "t",
+  [JongsungValue.NONE]: '',
+  [JongsungValue.ㄱ]: 'k',
+  [JongsungValue.ㄲ]: 'k',
+  [JongsungValue.ㄳ]: 'k',
+  [JongsungValue.ㄴ]: 'n',
+  [JongsungValue.ㄵ]: 'n',
+  [JongsungValue.ㄶ]: 'n',
+  [JongsungValue.ㄷ]: 't',
+  [JongsungValue.ㄹ]: 'l',
+  [JongsungValue.ㄺ]: 'k',
+  [JongsungValue.ㄻ]: 'm',
+  [JongsungValue.ㄼ]: 'l',
+  [JongsungValue.ㄽ]: 'l',
+  [JongsungValue.ㄾ]: 'l',
+  [JongsungValue.ㄿ]: 'l',
+  [JongsungValue.ㅀ]: 'l',
+  [JongsungValue.ㅁ]: 'm',
+  [JongsungValue.ㅂ]: 'p',
+  [JongsungValue.ㅄ]: 'p',
+  [JongsungValue.ㅅ]: 't',
+  [JongsungValue.ㅆ]: 't',
+  [JongsungValue.ㅇ]: 'ng',
+  [JongsungValue.ㅈ]: 't',
+  [JongsungValue.ㅊ]: 't',
+  [JongsungValue.ㅋ]: 'k',
+  [JongsungValue.ㅌ]: 't',
+  [JongsungValue.ㅍ]: 'p',
+  [JongsungValue.ㅎ]: 't',
 };
 
 export class KoreanCharacter {
@@ -1209,11 +1156,8 @@ export class KoreanCharacter {
     if (this.isHangul) {
       const base = this.code - KoreanCharacter.KOREAN_LOWER_VALUE;
       this.jongsung = (base % 28) as JongsungValue;
-      this.jungsung = (Math.floor((base - this.jongsung) / 28) %
-        21) as JungsungValue;
-      this.chosung = Math.floor(
-        (base - this.jongsung) / 28 / 21
-      ) as ChosungValue;
+      this.jungsung = (Math.floor((base - this.jongsung) / 28) % 21) as JungsungValue;
+      this.chosung = Math.floor((base - this.jongsung) / 28 / 21) as ChosungValue;
     } else {
       this.chosung = -1 as unknown as ChosungValue;
       this.jungsung = -1 as unknown as JungsungValue;
@@ -1277,10 +1221,7 @@ export class KoreanCharacter {
       type
     );
 
-    const jungsung = this.getJungsungObj().getPronunciation(
-      prevCharacter,
-      this
-    );
+    const jungsung = this.getJungsungObj().getPronunciation(prevCharacter, this);
 
     const jongsung = this.getJongsungObj().getPronunciation(
       nextCharacter,
@@ -1306,13 +1247,13 @@ export class KoreanCharacter {
 // ㄺ 종성 클래스
 export class JongsungLG extends Jongsung {
   constructor() {
-    super(JongsungValue.ㄺ, "k");
+    super(JongsungValue.ㄺ, 'k');
   }
 
   getComplexPronunciation(
     nextCharacter: KoreanCharacter,
-    consonantAssimilation: ConsonantAssimilation,
-    type: Type
+    _consonantAssimilation: ConsonantAssimilation,
+    _type: Type
   ): string {
     const chosung = nextCharacter.chosung;
 
@@ -1322,13 +1263,10 @@ export class JongsungLG extends Jongsung {
       chosung === ChosungValue.ㅇ ||
       chosung === ChosungValue.ㅎ
     ) {
-      return "l"; // 'ㄹ'로 발음
-    } else if (
-      chosung === ChosungValue.ㄴ ||
-      chosung === ChosungValue.ㄹ ||
-      chosung === ChosungValue.ㅁ
-    ) {
-      return "ng";
+      return 'l'; // 'ㄹ'로 발음
+    }
+    if (chosung === ChosungValue.ㄴ || chosung === ChosungValue.ㄹ || chosung === ChosungValue.ㅁ) {
+      return 'ng';
     }
 
     return this.defaultPronunciation;
@@ -1338,22 +1276,18 @@ export class JongsungLG extends Jongsung {
 // ㄻ 종성 클래스
 export class JongsungLM extends Jongsung {
   constructor() {
-    super(JongsungValue.ㄻ, "m");
+    super(JongsungValue.ㄻ, 'm');
   }
 
   getComplexPronunciation(
     nextCharacter: KoreanCharacter,
-    consonantAssimilation: ConsonantAssimilation,
-    type: Type
+    _consonantAssimilation: ConsonantAssimilation,
+    _type: Type
   ): string {
     const chosung = nextCharacter.chosung;
 
-    if (
-      chosung === ChosungValue.ㄹ ||
-      chosung === ChosungValue.ㅁ ||
-      chosung === ChosungValue.ㅇ
-    ) {
-      return "l";
+    if (chosung === ChosungValue.ㄹ || chosung === ChosungValue.ㅁ || chosung === ChosungValue.ㅇ) {
+      return 'l';
     }
 
     return this.defaultPronunciation;
@@ -1363,19 +1297,20 @@ export class JongsungLM extends Jongsung {
 // ㄼ 종성 클래스
 export class JongsungLB extends Jongsung {
   constructor() {
-    super(JongsungValue.ㄼ, "l");
+    super(JongsungValue.ㄼ, 'l');
   }
 
   getComplexPronunciation(
     nextCharacter: KoreanCharacter,
-    consonantAssimilation: ConsonantAssimilation,
-    type: Type
+    _consonantAssimilation: ConsonantAssimilation,
+    _type: Type
   ): string {
     const chosung = nextCharacter.chosung;
 
     if (chosung === ChosungValue.ㄴ || chosung === ChosungValue.ㄹ) {
-      return "m";
-    } else if (
+      return 'm';
+    }
+    if (
       chosung === ChosungValue.ㄷ ||
       chosung === ChosungValue.ㄸ ||
       chosung === ChosungValue.ㅂ ||
@@ -1388,9 +1323,10 @@ export class JongsungLB extends Jongsung {
       chosung === ChosungValue.ㅌ ||
       chosung === ChosungValue.ㅎ
     ) {
-      return "p";
-    } else if (chosung === ChosungValue.ㅃ) {
-      return "";
+      return 'p';
+    }
+    if (chosung === ChosungValue.ㅃ) {
+      return '';
     }
 
     return this.defaultPronunciation;
@@ -1400,19 +1336,20 @@ export class JongsungLB extends Jongsung {
 // ㄿ 종성 클래스
 export class JongsungLP extends Jongsung {
   constructor() {
-    super(JongsungValue.ㄿ, "l");
+    super(JongsungValue.ㄿ, 'l');
   }
 
   getComplexPronunciation(
     nextCharacter: KoreanCharacter,
-    consonantAssimilation: ConsonantAssimilation,
-    type: Type
+    _consonantAssimilation: ConsonantAssimilation,
+    _type: Type
   ): string {
     const chosung = nextCharacter.chosung;
 
     if (chosung === ChosungValue.ㄴ || chosung === ChosungValue.ㄹ) {
-      return "m";
-    } else if (
+      return 'm';
+    }
+    if (
       chosung === ChosungValue.ㄷ ||
       chosung === ChosungValue.ㄸ ||
       chosung === ChosungValue.ㅂ ||
@@ -1425,9 +1362,10 @@ export class JongsungLP extends Jongsung {
       chosung === ChosungValue.ㅌ ||
       chosung === ChosungValue.ㅎ
     ) {
-      return "p";
-    } else if (chosung === ChosungValue.ㅃ || chosung === ChosungValue.ㅍ) {
-      return "";
+      return 'p';
+    }
+    if (chosung === ChosungValue.ㅃ || chosung === ChosungValue.ㅍ) {
+      return '';
     }
 
     return this.defaultPronunciation;
@@ -1437,27 +1375,24 @@ export class JongsungLP extends Jongsung {
 // ㅀ 종성 클래스
 export class JongsungLH extends Jongsung {
   constructor() {
-    super(JongsungValue.ㅀ, "l");
+    super(JongsungValue.ㅀ, 'l');
   }
 
   getComplexPronunciation(
     nextCharacter: KoreanCharacter,
-    consonantAssimilation: ConsonantAssimilation,
+    _consonantAssimilation: ConsonantAssimilation,
     type: Type
   ): string {
     const chosung = nextCharacter.chosung;
 
     if (chosung === ChosungValue.ㅎ) {
-      return "";
-    } else if (chosung === ChosungValue.ㅇ) {
-      if (
-        type === Type.Compound &&
-        nextCharacter.getJungsungObj().isInducePalatalization()
-      ) {
+      return '';
+    }
+    if (chosung === ChosungValue.ㅇ) {
+      if (type === Type.Compound && nextCharacter.getJungsungObj().isInducePalatalization()) {
         return this.defaultPronunciation;
-      } else {
-        return "";
       }
+      return '';
     }
 
     return this.defaultPronunciation;
@@ -1467,18 +1402,18 @@ export class JongsungLH extends Jongsung {
 // ㅁ 종성 클래스
 export class JongsungM extends Jongsung {
   constructor() {
-    super(JongsungValue.ㅁ, "m");
+    super(JongsungValue.ㅁ, 'm');
   }
 
   getComplexPronunciation(
     nextCharacter: KoreanCharacter,
-    consonantAssimilation: ConsonantAssimilation,
-    type: Type
+    _consonantAssimilation: ConsonantAssimilation,
+    _type: Type
   ): string {
     const chosung = nextCharacter.chosung;
 
     if (chosung === ChosungValue.ㅇ) {
-      return "";
+      return '';
     }
 
     return this.defaultPronunciation;
@@ -1488,30 +1423,27 @@ export class JongsungM extends Jongsung {
 // ㅂ 종성 클래스
 export class JongsungB extends Jongsung {
   constructor() {
-    super(JongsungValue.ㅂ, "p");
+    super(JongsungValue.ㅂ, 'p');
   }
 
   getComplexPronunciation(
     nextCharacter: KoreanCharacter,
-    consonantAssimilation: ConsonantAssimilation,
+    _consonantAssimilation: ConsonantAssimilation,
     type: Type
   ): string {
     const chosung = nextCharacter.chosung;
 
-    if (
-      chosung === ChosungValue.ㄴ ||
-      chosung === ChosungValue.ㄹ ||
-      chosung === ChosungValue.ㅁ
-    ) {
-      return "m";
-    } else if (chosung === ChosungValue.ㅃ || chosung === ChosungValue.ㅇ) {
-      return "";
-    } else if (chosung === ChosungValue.ㅎ) {
+    if (chosung === ChosungValue.ㄴ || chosung === ChosungValue.ㄹ || chosung === ChosungValue.ㅁ) {
+      return 'm';
+    }
+    if (chosung === ChosungValue.ㅃ || chosung === ChosungValue.ㅇ) {
+      return '';
+    }
+    if (chosung === ChosungValue.ㅎ) {
       if (type === Type.Substantives) {
         return this.defaultPronunciation;
-      } else {
-        return "";
       }
+      return '';
     }
 
     return this.defaultPronunciation;
@@ -1521,24 +1453,21 @@ export class JongsungB extends Jongsung {
 // ㅄ 종성 클래스
 export class JongsungBS extends Jongsung {
   constructor() {
-    super(JongsungValue.ㅄ, "p");
+    super(JongsungValue.ㅄ, 'p');
   }
 
   getComplexPronunciation(
     nextCharacter: KoreanCharacter,
-    consonantAssimilation: ConsonantAssimilation,
-    type: Type
+    _consonantAssimilation: ConsonantAssimilation,
+    _type: Type
   ): string {
     const chosung = nextCharacter.chosung;
 
-    if (
-      chosung === ChosungValue.ㄴ ||
-      chosung === ChosungValue.ㄹ ||
-      chosung === ChosungValue.ㅁ
-    ) {
-      return "m";
-    } else if (chosung === ChosungValue.ㅃ) {
-      return "";
+    if (chosung === ChosungValue.ㄴ || chosung === ChosungValue.ㄹ || chosung === ChosungValue.ㅁ) {
+      return 'm';
+    }
+    if (chosung === ChosungValue.ㅃ) {
+      return '';
     }
 
     return this.defaultPronunciation;
@@ -1548,7 +1477,7 @@ export class JongsungBS extends Jongsung {
 // ㅅ 종성 클래스 (ㄷ과 동일한 로직)
 export class JongsungS extends Jongsung {
   constructor() {
-    super(JongsungValue.ㅅ, "t");
+    super(JongsungValue.ㅅ, 't');
   }
 
   getComplexPronunciation(
@@ -1557,24 +1486,20 @@ export class JongsungS extends Jongsung {
     type: Type
   ): string {
     // Java에서는 ㄷ의 로직을 재사용함
-    return new JongsungD().getComplexPronunciation(
-      nextCharacter,
-      consonantAssimilation,
-      type
-    );
+    return new JongsungD().getComplexPronunciation(nextCharacter, consonantAssimilation, type);
   }
 }
 
 // ㅎ 종성 클래스
 export class JongsungH extends Jongsung {
   constructor() {
-    super(JongsungValue.ㅎ, "t");
+    super(JongsungValue.ㅎ, 't');
   }
 
   getComplexPronunciation(
     nextCharacter: KoreanCharacter,
     consonantAssimilation: ConsonantAssimilation,
-    type: Type
+    _type: Type
   ): string {
     const chosung = nextCharacter.chosung;
 
@@ -1592,13 +1517,13 @@ export class JongsungH extends Jongsung {
       chosung === ChosungValue.ㅍ ||
       chosung === ChosungValue.ㅎ
     ) {
-      return "";
-    } else if (chosung === ChosungValue.ㄴ || chosung === ChosungValue.ㅁ) {
-      return "n";
-    } else if (chosung === ChosungValue.ㄹ) {
-      return consonantAssimilation === ConsonantAssimilation.Regressive
-        ? "l"
-        : "n";
+      return '';
+    }
+    if (chosung === ChosungValue.ㄴ || chosung === ChosungValue.ㅁ) {
+      return 'n';
+    }
+    if (chosung === ChosungValue.ㄹ) {
+      return consonantAssimilation === ConsonantAssimilation.Regressive ? 'l' : 'n';
     }
 
     return this.defaultPronunciation;

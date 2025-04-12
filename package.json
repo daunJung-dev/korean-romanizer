@@ -39,6 +39,7 @@
     "build:legacy": "tsc && tsc -p tsconfig.esm.json",
     "test": "jest",
     "lint": "biome lint .",
+    "lint:src": "biome check ./src ./scripts --write --unsafe",
     "format": "biome format --write .",
     "check": "biome check .",
     "prepublishOnly": "npm run build"

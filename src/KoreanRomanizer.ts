@@ -1,8 +1,4 @@
-import {
-  KoreanCharacter,
-  ConsonantAssimilation,
-  Type,
-} from "./KoreanCharacter";
+import { ConsonantAssimilation, KoreanCharacter, Type } from './KoreanCharacter';
 
 /**
  * 한글을 로마자로 변환하는 TypeScript 라이브러리.
@@ -14,73 +10,71 @@ export namespace KoreanRomanizer {
     /^(\s*)(강전|남궁|독고|동방|등정|망절|무본|사공|서문|선우|소봉|어금|장곡|제갈|황목|황보)(.{1,10})$/;
   const DISTRICT_POSTFIX_REGEX =
     /^(.{1,20}?)(특별자치도|특별자치시|특별시|광역시|대로|구|군|도|동|리|면|시|읍|가|길|로)(\s*)$/;
-  const DISTRICT_POSTFIXES_WITH_NUMBERS1 =
-    /^(.{0,20}?)(\d+)(\s*)(가길|가|번길|로|단지|동)(\s*)$/;
-  const DISTRICT_POSTFIXES_WITH_NUMBERS2 =
-    /^(.{0,20}?)(대?로)\s*(\d+[가번]?)(길)(\s*)$/;
+  const DISTRICT_POSTFIXES_WITH_NUMBERS1 = /^(.{0,20}?)(\d+)(\s*)(가길|가|번길|로|단지|동)(\s*)$/;
+  const DISTRICT_POSTFIXES_WITH_NUMBERS2 = /^(.{0,20}?)(대?로)\s*(\d+[가번]?)(길)(\s*)$/;
 
   const TYPICAL_SURNAME_MAP: { [key: string]: string } = {
-    가: "Ka",
-    간: "Kan",
-    갈: "Kal",
-    감: "Kam",
-    강: "Kang",
-    강전: "Kangjun",
-    견: "Kyun",
-    경: "Kyung",
-    계: "Kye",
-    고: "Ko",
-    공: "Kong",
-    곽: "Kwak",
-    구: "Koo",
-    국: "Kook",
-    군: "Kun",
-    궁: "Koong",
-    궉: "Kwok",
-    권: "Kwon",
-    근: "Keun",
-    금: "Keum",
-    기: "Ki",
-    길: "Kil",
-    김: "Kim",
-    노: "Noh",
-    두: "Doo",
-    란: "Lan",
-    뢰: "Loi",
-    루: "Lu",
-    망절: "Mangjul",
-    명: "Myung",
-    문: "Moon",
-    박: "Park",
-    변: "Byun",
-    부: "Boo",
-    선: "Sun",
-    선우: "Sunwoo",
-    성: "Sung",
-    순: "Soon",
-    신: "Shin",
-    심: "Shim",
-    아: "Ah",
-    어금: "Eokum",
-    오: "Oh",
-    우: "Woo",
-    운: "Woon",
-    유: "Yoo",
-    윤: "Yoon",
-    이: "Lee",
-    임: "Lim",
-    정: "Jung",
-    조: "Cho",
-    주: "Joo",
-    준: "June",
-    즙: "Chup",
-    최: "Choi",
-    편: "Pyun",
-    평: "Pyung",
-    풍: "Poong",
-    현: "Hyun",
-    형: "Hyung",
-    흥: "Hong",
+    가: 'Ka',
+    간: 'Kan',
+    갈: 'Kal',
+    감: 'Kam',
+    강: 'Kang',
+    강전: 'Kangjun',
+    견: 'Kyun',
+    경: 'Kyung',
+    계: 'Kye',
+    고: 'Ko',
+    공: 'Kong',
+    곽: 'Kwak',
+    구: 'Koo',
+    국: 'Kook',
+    군: 'Kun',
+    궁: 'Koong',
+    궉: 'Kwok',
+    권: 'Kwon',
+    근: 'Keun',
+    금: 'Keum',
+    기: 'Ki',
+    길: 'Kil',
+    김: 'Kim',
+    노: 'Noh',
+    두: 'Doo',
+    란: 'Lan',
+    뢰: 'Loi',
+    루: 'Lu',
+    망절: 'Mangjul',
+    명: 'Myung',
+    문: 'Moon',
+    박: 'Park',
+    변: 'Byun',
+    부: 'Boo',
+    선: 'Sun',
+    선우: 'Sunwoo',
+    성: 'Sung',
+    순: 'Soon',
+    신: 'Shin',
+    심: 'Shim',
+    아: 'Ah',
+    어금: 'Eokum',
+    오: 'Oh',
+    우: 'Woo',
+    운: 'Woon',
+    유: 'Yoo',
+    윤: 'Yoon',
+    이: 'Lee',
+    임: 'Lim',
+    정: 'Jung',
+    조: 'Cho',
+    주: 'Joo',
+    준: 'June',
+    즙: 'Chup',
+    최: 'Choi',
+    편: 'Pyun',
+    평: 'Pyung',
+    풍: 'Poong',
+    현: 'Hyun',
+    형: 'Hyung',
+    흥: 'Hong',
   };
 
   /**
@@ -104,46 +98,37 @@ export namespace KoreanRomanizer {
     options?: RomanizeOptions | Type | ConsonantAssimilation
   ): string {
     if (input === null) {
-      throw new Error("String should not be null.");
+      throw new Error('String should not be null.');
     }
 
     if (input.trim().length === 0) {
-      return "";
+      return '';
     }
 
     // 옵션 파라미터 처리
     let type: Type = Type.Typical;
-    let consonantAssimilation: ConsonantAssimilation =
-      ConsonantAssimilation.Regressive;
+    let consonantAssimilation: ConsonantAssimilation = ConsonantAssimilation.Regressive;
 
     if (options !== undefined) {
-      if (typeof options === "object") {
+      if (typeof options === 'object') {
         // RomanizeOptions 객체인 경우
         type = options.type || Type.Typical;
-        consonantAssimilation =
-          options.consonantAssimilation || ConsonantAssimilation.Regressive;
+        consonantAssimilation = options.consonantAssimilation || ConsonantAssimilation.Regressive;
       } else if (Object.values(Type).includes(options as Type)) {
         // Type enum 값인 경우
         type = options as Type;
-      } else if (
-        Object.values(ConsonantAssimilation).includes(
-          options as ConsonantAssimilation
-        )
-      ) {
+      } else if (Object.values(ConsonantAssimilation).includes(options as ConsonantAssimilation)) {
         // ConsonantAssimilation enum 값인 경우
         consonantAssimilation = options as ConsonantAssimilation;
       }
     }
 
     // 공백으로 구분된 부분을 처리
-    if (
-      input.indexOf(" ") > 0 &&
-      (type === Type.Name || type === Type.NameTypical)
-    ) {
-      const parts = input.split(" ");
-      let result = "";
+    if (input.indexOf(' ') > 0 && (type === Type.Name || type === Type.NameTypical)) {
+      const parts = input.split(' ');
+      let result = '';
       for (let i = 0; i < parts.length; i++) {
-        if (i > 0) result += " ";
+        if (i > 0) result += ' ';
         result += romanize(parts[i], { type, consonantAssimilation });
       }
       return result;
@@ -163,21 +148,20 @@ export namespace KoreanRomanizer {
         break;
     }
 
-    let result = "";
+    let result = '';
     let prevCharacter: KoreanCharacter | null = null;
     let currentCharacter: KoreanCharacter | null = null;
     let nextCharacter: KoreanCharacter | null = null;
 
-    const chars = normalizedInput.split("");
+    const chars = normalizedInput.split('');
     for (let i = 0; i < chars.length; i++) {
       const currentChar = chars[i];
       prevCharacter = currentCharacter;
       currentCharacter = new KoreanCharacter(currentChar);
-      nextCharacter =
-        i < chars.length - 1 ? new KoreanCharacter(chars[i + 1]) : null;
+      nextCharacter = i < chars.length - 1 ? new KoreanCharacter(chars[i + 1]) : null;
 
       if (currentCharacter.isKoreanCharacter()) {
-        let romanized = currentCharacter.getRomanizedString(
+        const romanized = currentCharacter.getRomanizedString(
           prevCharacter,
           nextCharacter,
           consonantAssimilation,
@@ -188,8 +172,7 @@ export namespace KoreanRomanizer {
           if (
             type === Type.District &&
             prevCharacter !== null &&
-            (prevCharacter.toString() === "-" ||
-              !isNaN(Number(prevCharacter.toString())))
+            (prevCharacter.toString() === '-' || !Number.isNaN(Number(prevCharacter.toString())))
           ) {
             result += romanized;
           } else {
@@ -217,27 +200,18 @@ export namespace KoreanRomanizer {
 
     if (type === Type.NameTypical) {
       if (matcher && matcher.length > 3) {
-        return (
-          matcher[1] +
-          (TYPICAL_SURNAME_MAP[matcher[2]] || matcher[2]) +
-          " " +
-          matcher[3]
-        );
-      } else {
-        const typicalSurname = TYPICAL_SURNAME_MAP[input.charAt(0)];
-        if (typicalSurname) {
-          return typicalSurname + " " + input.substring(1);
-        } else {
-          return input.charAt(0) + " " + input.substring(1);
-        }
+        return `${matcher[1] + (TYPICAL_SURNAME_MAP[matcher[2]] || matcher[2])} ${matcher[3]}`;
       }
-    } else {
-      if (matcher && matcher.length > 3) {
-        return matcher[1] + matcher[2] + " " + matcher[3];
-      } else {
-        return input.charAt(0) + " " + input.substring(1);
+      const typicalSurname = TYPICAL_SURNAME_MAP[input.charAt(0)];
+      if (typicalSurname) {
+        return `${typicalSurname} ${input.substring(1)}`;
       }
+      return `${input.charAt(0)} ${input.substring(1)}`;
     }
+    if (matcher && matcher.length > 3) {
+      return `${matcher[1] + matcher[2]} ${matcher[3]}`;
+    }
+    return `${input.charAt(0)} ${input.substring(1)}`;
   }
 
   /**
@@ -250,33 +224,17 @@ export namespace KoreanRomanizer {
     let matcher = DISTRICT_POSTFIXES_WITH_NUMBERS2.exec(input);
 
     if (matcher) {
-      return (
-        matcher[1] +
-        "-" +
-        matcher[2] +
-        " " +
-        matcher[3] +
-        "-" +
-        matcher[4] +
-        matcher[5]
-      );
-    } else {
-      matcher = DISTRICT_POSTFIXES_WITH_NUMBERS1.exec(input);
-      if (matcher) {
-        return (
-          matcher[1] +
-          (matcher[1].endsWith(" ") ? "" : " ") +
-          matcher[2] +
-          "-" +
-          matcher[4] +
-          matcher[5]
-        );
-      } else {
-        matcher = DISTRICT_POSTFIX_REGEX.exec(input);
-        if (matcher) {
-          return matcher[1] + "-" + matcher[2] + matcher[3];
-        }
-      }
+      return `${matcher[1]}-${matcher[2]} ${matcher[3]}-${matcher[4]}${matcher[5]}`;
+    }
+    matcher = DISTRICT_POSTFIXES_WITH_NUMBERS1.exec(input);
+    if (matcher) {
+      return `${
+        matcher[1] + (matcher[1].endsWith(' ') ? '' : ' ') + matcher[2]
+      }-${matcher[4]}${matcher[5]}`;
+    }
+    matcher = DISTRICT_POSTFIX_REGEX.exec(input);
+    if (matcher) {
+      return `${matcher[1]}-${matcher[2]}${matcher[3]}`;
     }
 
     return input;
@@ -291,16 +249,16 @@ export namespace KoreanRomanizer {
    */
   export function romanizeWithType(input: string, type: Type): string {
     if (input === null) {
-      throw new Error("String should not be null.");
+      throw new Error('String should not be null.');
     }
 
     if (input.trim().length === 0) {
-      return "";
+      return '';
     }
 
     // 공백으로 구분된 부분을 처리
-    if (input.indexOf(" ") > 0) {
-      const parts = input.split(" ");
+    if (input.indexOf(' ') > 0) {
+      const parts = input.split(' ');
       const result: string[] = [];
 
       for (let i = 0; i < parts.length; i++) {
@@ -316,7 +274,7 @@ export namespace KoreanRomanizer {
         }
       }
 
-      return result.join(" ");
+      return result.join(' ');
     }
 
     return romanize(input, { type });
