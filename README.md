@@ -1,152 +1,123 @@
-[![Build Status](https://travis-ci.org/crizin/korean-romanizer.svg?branch=master)](https://travis-ci.org/crizin/korean-romanizer)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/72ed8965fd6e4e9c8faa9a0b3090a045)](https://www.codacy.com/app/crizin/korean-romanizer?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=crizin/korean-romanizer&amp;utm_campaign=Badge_Grade)
+[![Build Status](https://github.com/daunjung-dev/korean-romanizer/workflows/CI/badge.svg)](https://github.com/daunjung-dev/korean-romanizer/actions?query=workflow%3ACI)
+[![npm version](https://img.shields.io/npm/v/korean-romanizer-ts.svg)](https://www.npmjs.com/package/korean-romanizer-ts)
 [![MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![TypeScript](https://img.shields.io/badge/%3C%2F%3E-TypeScript-%230074c1.svg)](https://www.typescriptlang.org/)
 
 # Korean Romanizer
 
-## 소개
+한글을 로마자로 변환하는 TypeScript 라이브러리입니다. 국립국어원 로마자 표기법을 기반으로 구현되었으며, 많은 부분을 커버할 수 있지만 한글의 특성상 단어 사전 데이터가 없으면 100% 구현하기 어려워 완벽하지는 않습니다.
 
-한국어를 입력하면 로마자로 변환해주는 Java 라이브러리.
-[국립국어원 로마자 표기법](https://www.korean.go.kr/front/page/pageView.do?page_id=P000148&mn_id=99)을 기반으로 구현되었고
-많은 부분이 커버 가능하지만 한국어의 특성상 단어별 사전 데이터가 존재하지 않으면 100% 구현이 어렵기 때문에 완벽하지는 않다.
+> 이 라이브러리는 [crizin/korean-romanizer](https://github.com/crizin/korean-romanizer) 자바 라이브러리를 TypeScript로 포팅한 버전입니다. 원본 자바 버전과 동일한 기능을 제공하지만, 현대적인 JavaScript/TypeScript 환경에 맞게 최적화되었습니다.
 
-## Maven
+## 특징
 
-```xml
-  <dependency>
-    <groupId>net.crizin</groupId>
-    <artifactId>korean-romanizer</artifactId>
-    <version>2.0.1</version>
-  </dependency>
+- ✨ 경량화된 번들 (약 15KB)
+- 🚀 Tree-shaking 지원
+- 📦 ESM과 CommonJS 모듈 모두 지원
+- 🔄 국립국어원 로마자 표기법 준수
+- 💡 모듈, 네임스페이스, 함수 레벨 임포트 모두 지원
+
+## 설치
+
+```bash
+npm install korean-romanizer-ts
 ```
 
-## 온라인 데모
+## 사용 방법
 
-[Online Demo](http://unply.com/@/koreanRomanizer/)
+### 함수 직접 임포트 (권장)
 
-## 클래스 설명
+```typescript
+// 개별 함수 직접 임포트 - 가장 간결하고 우아한 방식
+import {
+  romanize,
+  romanizeWithType,
+  romanizeWithAssimilation,
+} from "korean-romanizer";
+import { Type, ConsonantAssimilation } from "korean-romanizer";
 
-### `KoreanCharacter`
+// 기본 변환
+console.log(romanize("안녕하세요")); // "Annyeonghaseyo"
 
-#### 로마자 변환 옵션
+// 자음 동화 옵션 사용
+console.log(
+  romanizeWithAssimilation("한라산", ConsonantAssimilation.Progressive)
+); // "Hallasan"
 
-##### `KoreanCharacter.ConsonantAssimilation`
-
-자음 동화가 일어나는 부분에서 역행 동화, 순행 동화 모두 가능할 때 어느쪽을 선택할지 지정할 수 있는 옵션.
-
-- `ConsonantAssimilation.Progressive`: 순행 동화
-- `ConsonantAssimilation.Regressive`: 역행 동화
-
-```java
-KoreanRomanizer.romanize("신라면", KoreanCharacter.ConsonantAssimilation.Progressive);
-// => Sinnamyeon
-
-KoreanRomanizer.romanize("신라면", KoreanCharacter.ConsonantAssimilation.Regressive);
-// => Sillamyeon
-```
-##### `KoreanCharacter.Type`
-
-단어의 성격별로 예외적인 처리를 하기 위해 단어의 타입을 지정할 수 있는 옵션.
-
-##### `Type.Substantives`
-
-체언에서 'ㄱ, ㄷ, ㅂ' 뒤에 'ㅎ'이 따를 때 'ㅎ'을 밝혀 적기 위해 주는 옵션.
-
-```java
-KoreanRomanizer.romanize("묵호");
-// => Muko
-
-KoreanRomanizer.romanize("묵호", KoreanCharacter.Type.Substantives);
-// => Mukho
+// 단어 유형 옵션 사용
+console.log(romanizeWithType("김철수", Type.Name)); // "Kim Cheolsu"
 ```
 
-##### `Type.Compound`
+### 특정 함수만 임포트
 
-합성어에서 앞 단어의 끝이 자음이고 뒤 단어의 첫 음절 발음이 y 또는 i로 시작되는 경우 'ㄴ'을 첨가하는 옵션. 
+각 함수를 별도의 경로에서 가져올 수도 있습니다. 이 방식은 트리쉐이킹과 번들 사이즈 최적화에 도움이 됩니다.
 
-```java
-KoreanRomanizer.romanize("학여울");
-// => Hagyeoul
+```typescript
+// 특정 함수만 필요할 경우
+import romanize from "korean-romanizer/romanize";
+import romanizeWithType from "korean-romanizer/romanizeWithType";
+import romanizeWithAssimilation from "korean-romanizer/romanizeWithAssimilation";
 
-KoreanRomanizer.romanize("학여울", KoreanCharacter.Type.Compound);
-// => Hangnyeoul
+// 타입 임포트
+import { Type, ConsonantAssimilation } from "korean-romanizer";
 ```
 
-##### `Type.District`
+### 네임스페이스 사용 (기존 방식)
 
-지명을 올바르게 표기하기 위한 옵션.
+```typescript
+// 네임스페이스 방식 (하위 호환성 유지)
+import { KoreanRomanizer } from "korean-romanizer";
+import { Type, ConsonantAssimilation } from "korean-romanizer";
 
-```java
-KoreanRomanizer.romanize("제주도");
-// => Jejudo
-KoreanRomanizer.romanize("효자로73번길")
-// => Hyojaro73Beon-gil
+// 기본 변환
+console.log(KoreanRomanizer.romanize("안녕하세요")); // "Annyeonghaseyo"
 
-KoreanRomanizer.romanize("제주도", KoreanCharacter.Type.District);
-// => Jeju-do
-KoreanRomanizer.romanize("효자로73번길", KoreanCharacter.Type.District)
-// => Hyoja-ro 73beon-gil
+// 자음 동화 옵션 사용
+console.log(
+  KoreanRomanizer.romanizeWithAssimilation(
+    "한라산",
+    ConsonantAssimilation.Progressive
+  )
+); // "Hallasan"
+
+// 단어 유형 옵션 사용
+console.log(KoreanRomanizer.romanizeWithType("김철수", Type.Name)); // "Kim Cheolsu"
 ```
 
-##### `Type.Name`
+### 옵션
 
-인명을 올바르게 표기하기 위한 옵션
+#### 자음 동화 (ConsonantAssimilation)
 
-```java
-KoreanRomanizer.romanize("제갈공명")
-// => Jegalgongmyeong
+- `Progressive`: 순행동화
+- `Regressive`: 역행동화 (기본값)
 
-KoreanRomanizer.romanize("제갈공명", KoreanCharacter.Type.Name)
-// => Jegal Gongmyeong
+#### 단어 유형 (Type)
+
+- `Substantives`: 명사와 같은 실체언
+- `Compound`: 복합어
+- `District`: 주소, 위치
+- `Name`: 사람의 이름
+- `NameTypical`: 가장 일반적으로 사용되는 표기법을 따르는 사람의 이름
+- `Typical`: 일반 단어 (기본값)
+
+## 개발
+
+### 빌드
+
+```bash
+npm run build
 ```
 
-##### `Type.NameTypical`
+### 테스트
 
-`Type.Name`과 같지만 흔히 사용하는 성씨 표기법을 따르는 옵션
-
-```java
-KoreanRomanizer.romanize("박보검", KoreanCharacter.Type.Name)
-// => Bak Bogeom
-
-KoreanRomanizer.romanize("박보검", KoreanCharacter.Type.NameTypical)
-// => Park Bogeom
+```bash
+npm test
 ```
 
-##### `Type.Typical`
+## 원본 프로젝트
 
-위 옵션들을 지정하지 않았을 때의 기본 값.
-
-#### 사용법
-
-```java
-new KoreanCharacter('A').getRomanizedString();
-// => A
-
-new KoreanCharacter('고').getRomanizedString();
-// => go
-
-new KoreanCharacter('고').getRomanizedString(new KoreanCharacter('닭'), null, ConsonantAssimilation.Regressive, Type.Typical);
-// '고' 앞에 '닭'이 있을 때 '고'의 발음
-// => kko
-
-new KoreanCharacter('신').getRomanizedString(null, new KoreanCharacter('라'), KoreanCharacter.ConsonantAssimilation.Progressive, KoreanCharacter.Type.Typical)
-// '신' 뒤에 '라'가 있고 순행 동화를 적용했을 때의 발음
-// => sin
-```
-
-### `KoreanRomanizer`
-
-#### `KoreanRomanizer.romanize`
-
-- `KoreanRomanizer.romanize(String)`
-- `KoreanRomanizer.romanize(String, ConsonantAssimilation)`
-- `KoreanRomanizer.romanize(String, Type)`
-- `KoreanRomanizer.romanize(String, Type, ConsonantAssimilation)`
-
-입력 받은 문자열을 로마자로 변환한다. 변환시 옵션을 추가할 수 있는 Overloading 메소드들도 존재한다.
-
-`type`, `consonantAssimilation` 값을 생략했을 때는 `Type.Typical`, `ConsonantAssimilation.Regressive`가 기본값.
+이 라이브러리는 [@crizin](https://github.com/crizin)이 개발한 [korean-romanizer](https://github.com/crizin/korean-romanizer) 자바 라이브러리를 기반으로 합니다. 훌륭한 원본 라이브러리를 제공해 주신 crizin님께 감사드립니다.
 
 ## 라이선스
 
-[MIT license](https://opensource.org/licenses/MIT)
+MIT License

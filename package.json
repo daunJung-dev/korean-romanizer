@@ -1,0 +1,81 @@
+{
+  "name": "korean-romanizer-ts",
+  "version": "1.0.0",
+  "description": "한글 로마자 변환 라이브러리 - TypeScript 버전",
+  "main": "dist/index.js",
+  "module": "dist/esm/index.js",
+  "types": "dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/esm/index.js",
+      "require": "./dist/index.js"
+    },
+    "./romanize": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/functions/romanize.js",
+      "require": "./dist/functions/romanize.cjs"
+    },
+    "./romanizeWithType": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/functions/romanizeWithType.js",
+      "require": "./dist/functions/romanizeWithType.cjs"
+    },
+    "./romanizeWithAssimilation": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/functions/romanizeWithAssimilation.js",
+      "require": "./dist/functions/romanizeWithAssimilation.cjs"
+    }
+  },
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "clean": "rm -rf dist",
+    "build": "npm run clean && node scripts/build.js && node scripts/types.js",
+    "build:legacy": "tsc && tsc -p tsconfig.esm.json",
+    "test": "jest",
+    "lint": "biome lint .",
+    "format": "biome format --write .",
+    "check": "biome check .",
+    "prepublishOnly": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/daunjung-dev/korean-romanizer.git"
+  },
+  "keywords": [
+    "korean",
+    "romanization",
+    "hangul",
+    "transliteration",
+    "typescript",
+    "npm",
+    "한글",
+    "로마자",
+    "변환"
+  ],
+  "author": "Daunjung-dev",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/daunjung-dev/korean-romanizer/issues"
+  },
+  "homepage": "https://github.com/daunjung-dev/korean-romanizer#readme",
+  "devDependencies": {
+    "@biomejs/biome": "^1.5.3",
+    "@types/jest": "^29.5.0",
+    "esbuild": "^0.25.2",
+    "jest": "^29.5.0",
+    "ts-jest": "^29.1.0",
+    "typescript": "^5.0.4"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

@@ -4,3 +4,7 @@
 /.project
 /.idea
 /*.iml
+/dist
+/node_modules
+/coverage
+/.cursor
