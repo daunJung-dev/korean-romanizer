@@ -47,7 +47,12 @@ async function createIndividualEntryPoints() {
   }
 
   // 함수별 래퍼 생성
-  const functions = ['romanize', 'romanizeWithType', 'romanizeWithAssimilation'];
+  const functions = [
+    'romanize',
+    'romanizeWithType',
+    'romanizeWithAssimilation',
+    'romanizeNameVariants',
+  ];
 
   for (const func of functions) {
     // ESM 래퍼 생성
