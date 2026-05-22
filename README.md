@@ -84,6 +84,45 @@ console.log(
 console.log(KoreanRomanizer.romanizeWithType("김철수", Type.Name)); // "Kim Cheolsu"
 ```
 
+### 이름의 모든 영문 표기 변형 가져오기
+
+한국인이 영어로 자기 이름을 적을 때 실제로 쓰는 다양한 표기 (예: 김 → Kim/Gim, 이 → Lee/Yi/Rhee, 정 → Jung/Jeong/Chung, 영 → Young/Yeong)를 배열로 받을 수 있습니다.
+
+```typescript
+import { romanizeNameVariants } from "@daun_jung/korean-romanizer";
+
+const variants = romanizeNameVariants("김철수");
+// [
+//   "Kim Chulsoo",
+//   "Kim Cheolsu",
+//   "Kim Chul-su",
+//   "Gim Cheolsu",
+//   ...
+// ]
+```
+
+#### 옵션 (`NameVariantOptions`)
+
+| 옵션                      | 기본값  | 설명                                              |
+| ------------------------- | ------- | ------------------------------------------------- |
+| `limit`                   | `100`   | 반환할 최대 변형 개수                             |
+| `surnameFirst`            | `true`  | 성-이름 순서 (예: `"Kim Cheolsu"`) 포함           |
+| `givenNameFirst`          | `true`  | 이름-성 순서 (예: `"Cheolsu Kim"`) 포함           |
+| `joinedGivenName`         | `true`  | 이름을 붙여 쓴 형태 (예: `"Cheolsu"`) 포함        |
+| `hyphenatedGivenName`     | `true`  | 하이픈 형태 (예: `"Cheol-su"`) 포함               |
+| `spaceSeparatedGivenName` | `false` | 공백 분리 형태 (예: `"Cheol Su"`) 포함            |
+| `surnameOverrides`        | `{}`    | 기본 성씨 매핑에 사용자 변형을 추가/덮어쓰기      |
+| `syllableOverrides`       | `{}`    | 기본 음절 매핑에 사용자 변형을 추가/덮어쓰기      |
+
+```typescript
+romanizeNameVariants("김철수", {
+  hyphenatedGivenName: false,
+  spaceSeparatedGivenName: true,
+  surnameOverrides: { 김: ["Khim"] },
+  limit: 20,
+});
+```
+
 ### 옵션
 
 #### 자음 동화 (ConsonantAssimilation)

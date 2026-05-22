@@ -25,6 +25,11 @@
       "types": "./dist/types/index.d.ts",
       "import": "./dist/functions/romanizeWithAssimilation.js",
       "require": "./dist/functions/romanizeWithAssimilation.cjs"
+    },
+    "./romanizeNameVariants": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/functions/romanizeNameVariants.js",
+      "require": "./dist/functions/romanizeNameVariants.cjs"
     }
   },
   "files": [

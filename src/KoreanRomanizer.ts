@@ -1,4 +1,8 @@
 import { ConsonantAssimilation, KoreanCharacter, Type } from './KoreanCharacter';
+import {
+  type NameVariantOptions,
+  romanizeNameVariants as romanizeNameVariantsImpl,
+} from './NameVariants';
 
 /**
  * 한글을 로마자로 변환하는 TypeScript 라이브러리.
@@ -292,6 +296,17 @@ export namespace KoreanRomanizer {
     consonantAssimilation: ConsonantAssimilation
   ): string {
     return romanize(input, { consonantAssimilation });
+  }
+
+  /**
+   * 한국인이 영어로 변환할 만한 모든 방식으로 이름의 영문 표기 변형을 배열로 돌려준다.
+   *
+   * @param name 한글 이름 (예: "김철수", "남궁민수")
+   * @param options 변형 생성 옵션
+   * @returns 영문 표기 변형 배열 (중복 제거됨)
+   */
+  export function romanizeNameVariants(name: string, options?: NameVariantOptions): string[] {
+    return romanizeNameVariantsImpl(name, options);
   }
 }
 

@@ -123,6 +123,91 @@ describe('KoreanRomanizer', () => {
     });
   });
 
+  describe('romanizeNameVariants', () => {
+    it('흔한 단성 이름의 다양한 표기를 모두 포함한다', () => {
+      const variants = KoreanRomanizer.romanizeNameVariants('김철수', { limit: 200 });
+      expect(variants).toContain('Kim Chulsoo');
+      expect(variants).toContain('Kim Cheolsu');
+      expect(variants).toContain('Gim Cheolsu');
+      expect(variants).toContain('Kim Chul-su');
+      // 이름 우선 순서도 포함
+      expect(variants).toContain('Chulsoo Kim');
+    });
+
+    it('이/박/최 등 관습 표기를 포함한다', () => {
+      const lee = KoreanRomanizer.romanizeNameVariants('이지은', { limit: 200 });
+      expect(lee).toContain('Lee Jieun');
+      expect(lee).toContain('Yi Jieun');
+      expect(lee).toContain('Rhee Jieun');
+
+      const park = KoreanRomanizer.romanizeNameVariants('박보검', { limit: 200 });
+      expect(park).toContain('Park Bogeom');
+      expect(park).toContain('Bak Bogeom');
+
+      const choi = KoreanRomanizer.romanizeNameVariants('최시원', { limit: 200 });
+      expect(choi).toContain('Choi Siwon');
+      expect(choi).toContain('Choe Siwon');
+    });
+
+    it('복성을 처리한다', () => {
+      const variants = KoreanRomanizer.romanizeNameVariants('남궁민수', { limit: 200 });
+      expect(variants.some((v) => v.startsWith('Namgoong'))).toBe(true);
+      expect(variants.some((v) => v.startsWith('Namkung'))).toBe(true);
+
+      const sunwoo = KoreanRomanizer.romanizeNameVariants('선우은숙', { limit: 200 });
+      expect(sunwoo.some((v) => v.startsWith('Sunwoo'))).toBe(true);
+    });
+
+    it('하이픈 형태와 붙여 쓴 형태를 모두 제공한다', () => {
+      const variants = KoreanRomanizer.romanizeNameVariants('김철수', { limit: 200 });
+      expect(variants).toContain('Kim Chul-su');
+      expect(variants).toContain('Kim Chulsu');
+    });
+
+    it('옵션으로 형태와 순서를 제어할 수 있다', () => {
+      const onlyJoined = KoreanRomanizer.romanizeNameVariants('김철수', {
+        joinedGivenName: true,
+        hyphenatedGivenName: false,
+        spaceSeparatedGivenName: false,
+        givenNameFirst: false,
+        limit: 200,
+      });
+      expect(onlyJoined.every((v) => !v.includes('-'))).toBe(true);
+      expect(onlyJoined.every((v) => v.startsWith('Kim') || v.startsWith('Gim'))).toBe(true);
+
+      const spaced = KoreanRomanizer.romanizeNameVariants('김철수', {
+        joinedGivenName: false,
+        hyphenatedGivenName: false,
+        spaceSeparatedGivenName: true,
+        givenNameFirst: false,
+        limit: 200,
+      });
+      expect(spaced.some((v) => /^Kim Chul Su$/.test(v) || /^Kim Cheol Su$/.test(v))).toBe(true);
+    });
+
+    it('limit을 적용하고 중복을 제거한다', () => {
+      const variants = KoreanRomanizer.romanizeNameVariants('김철수', { limit: 5 });
+      expect(variants).toHaveLength(5);
+      expect(new Set(variants.map((v) => v.toLowerCase())).size).toBe(5);
+    });
+
+    it('사용자 지정 오버라이드를 받는다', () => {
+      const variants = KoreanRomanizer.romanizeNameVariants('김철수', {
+        surnameOverrides: { 김: ['Khim'] },
+        syllableOverrides: { 철: ['Tchul'] },
+        limit: 200,
+      });
+      expect(variants.some((v) => v.startsWith('Khim '))).toBe(true);
+      expect(variants.some((v) => v.includes('Tchul'))).toBe(true);
+    });
+
+    it('잘못된 입력을 거부한다', () => {
+      expect(() => KoreanRomanizer.romanizeNameVariants('Kim')).toThrow();
+      expect(() => KoreanRomanizer.romanizeNameVariants('가')).toThrow();
+      expect(KoreanRomanizer.romanizeNameVariants('')).toEqual([]);
+    });
+  });
+
   describe('testLongText', () => {
     it('긴 텍스트를 처리한다', () => {
       const koreanText =
